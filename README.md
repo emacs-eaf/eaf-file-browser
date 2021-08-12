@@ -10,3 +10,4 @@ File browser application for the [Emacs Application Framework](https://github.co
 | Package        | Description          |
 | :--------      | :------              |
 | python-qrcode                  | Render QR code pointing to local files                             |
+| filebrowser-bin                                         | Share files between computer and smartphone                        |
