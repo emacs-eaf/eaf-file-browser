@@ -23,7 +23,7 @@ from PyQt5 import QtGui, QtCore
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor, QFont
 from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout
-from core.utils import get_local_ip, get_free_port, get_emacs_var
+from core.utils import get_local_ip, get_free_port, get_emacs_var, message_to_emacs
 import subprocess
 import os
 import qrcode
@@ -47,6 +47,8 @@ class AppBuffer(Buffer):
         os.kill(self.buffer_widget.background_process.pid, signal.SIGKILL)
 
         super().destroy_buffer()
+
+        message_to_emacs("Stop: {0} -> {1}".format(self.buffer_widget.address, self.buffer_widget.url))
 
 class Image(qrcode.image.base.BaseImage):
     def __init__(self, border, width, box_size):
@@ -77,7 +79,7 @@ class FileUploaderWidget(QWidget):
 
         self.setStyleSheet("background-color: transparent;")
 
-        url = os.path.expanduser(url)
+        self.url = os.path.expanduser(url)
 
         self.file_name_font = QFont()
         self.file_name_font.setPointSize(24)
@@ -117,7 +119,8 @@ class FileUploaderWidget(QWidget):
         tmp_db_file = os.path.join(tempfile.gettempdir(), "filebrowser-" + uuid.uuid1().hex + ".db")
         self.background_process = subprocess.Popen(
             "filebrowser --noauth -d {0} --address {1} -p {2}".format(tmp_db_file, self.local_ip, self.port),
-            cwd=url,
+            cwd=self.url,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             shell=True)
+        message_to_emacs("Start: {0} -> {1}".format(self.address, self.url))
