@@ -37,8 +37,6 @@ class AppBuffer(Buffer):
     def __init__(self, buffer_id, url, argument):
         Buffer.__init__(self, buffer_id, url, argument, False)
 
-        self.background_color = QColor(get_emacs_var("eaf-emacs-theme-background-color"))
-
         self.add_widget(FileUploaderWidget(url,
                                            get_emacs_var("eaf-emacs-theme-background-color"),
                                            get_emacs_var("eaf-emacs-theme-foreground-color")))
