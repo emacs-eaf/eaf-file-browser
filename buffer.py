@@ -37,9 +37,7 @@ class AppBuffer(Buffer):
     def __init__(self, buffer_id, url, argument):
         Buffer.__init__(self, buffer_id, url, argument, False)
 
-        self.add_widget(FileUploaderWidget(url,
-                                           get_emacs_var("eaf-emacs-theme-background-color"),
-                                           get_emacs_var("eaf-emacs-theme-foreground-color")))
+        self.add_widget(FileUploaderWidget(url, get_emacs_var("eaf-emacs-theme-foreground-color")))
 
     def destroy_buffer(self):
         os.kill(self.buffer_widget.background_process.pid, signal.SIGKILL)
@@ -72,7 +70,7 @@ class Image(qrcode.image.base.BaseImage):
         pass
 
 class FileUploaderWidget(QWidget):
-    def __init__(self, url, background_color, foreground_color):
+    def __init__(self, url, foreground_color):
         QWidget.__init__(self)
 
         self.setStyleSheet("background-color: transparent;")
