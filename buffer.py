@@ -23,7 +23,7 @@ from PyQt5 import QtGui, QtCore
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor, QFont
 from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout
-from core.utils import get_local_ip, get_free_port, get_emacs_var, message_to_emacs
+from core.utils import get_local_ip, get_free_port, message_to_emacs
 import subprocess
 import os
 import qrcode
@@ -37,7 +37,7 @@ class AppBuffer(Buffer):
     def __init__(self, buffer_id, url, argument):
         Buffer.__init__(self, buffer_id, url, argument, False)
 
-        self.add_widget(FileUploaderWidget(url, get_emacs_var("eaf-emacs-theme-foreground-color")))
+        self.add_widget(FileUploaderWidget(url, self.theme_background_color, self.theme_foreground_color))
 
     def destroy_buffer(self):
         os.kill(self.buffer_widget.background_process.pid, signal.SIGKILL)
@@ -70,7 +70,7 @@ class Image(qrcode.image.base.BaseImage):
         pass
 
 class FileUploaderWidget(QWidget):
-    def __init__(self, url, foreground_color):
+    def __init__(self, url, background_color, foreground_color):
         QWidget.__init__(self)
 
         self.setStyleSheet("background-color: transparent;")
