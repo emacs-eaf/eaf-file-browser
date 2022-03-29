@@ -19,10 +19,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5 import QtGui, QtCore
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QColor, QFont
-from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout
+from PyQt6 import QtGui, QtCore
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QColor, QFont
+from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout
 from core.utils import get_local_ip, get_free_port, message_to_emacs
 import subprocess
 import os
@@ -52,8 +52,8 @@ class Image(qrcode.image.base.BaseImage):
         self.width = width
         self.box_size = box_size
         size = (width + border * 2) * box_size
-        self._image = QtGui.QImage(size, size, QtGui.QImage.Format_RGB16)
-        self._image.fill(QtCore.Qt.white)
+        self._image = QtGui.QImage(size, size, QtGui.QImage.Format.Format_RGB16)
+        self._image.fill(QtCore.Qt.GlobalColor.white)
 
     def pixmap(self):
         return QtGui.QPixmap.fromImage(self._image)
@@ -64,7 +64,7 @@ class Image(qrcode.image.base.BaseImage):
             (col + self.border) * self.box_size,
             (row + self.border) * self.box_size,
             self.box_size, self.box_size,
-            QtCore.Qt.black)
+            QtCore.Qt.GlobalColor.black)
 
     def save(self, stream, kind=None):
         pass
@@ -78,32 +78,32 @@ class FileUploaderWidget(QWidget):
         self.url = os.path.expanduser(url)
 
         self.file_name_font = QFont()
-        self.file_name_font.setPointSize(24)
+        self.file_name_font.setPointSize(48)
 
         self.file_name_label = QLabel()
         self.file_name_label.setText("Your smartphone file will be shared at\n{0}".format(url))
         self.file_name_label.setFont(self.file_name_font)
-        self.file_name_label.setAlignment(Qt.AlignCenter)
+        self.file_name_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.file_name_label.setStyleSheet("color: {}".format(foreground_color))
 
         self.qrcode_label = QLabel()
 
         self.notify_font = QFont()
-        self.notify_font.setPointSize(12)
+        self.notify_font.setPointSize(24)
         self.notify_label = QLabel()
         self.notify_label.setText("Scan the QR code above to upload a file from your smartphone.\nMake sure the smartphone is connected to the same WiFi network as this computer.")
         self.notify_label.setFont(self.notify_font)
-        self.notify_label.setAlignment(Qt.AlignCenter)
+        self.notify_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.notify_label.setStyleSheet("color: {}".format(foreground_color))
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.addStretch()
-        layout.addWidget(self.qrcode_label, 0, Qt.AlignCenter)
+        layout.addWidget(self.qrcode_label, 0, Qt.AlignmentFlag.AlignCenter)
         layout.addSpacing(20)
-        layout.addWidget(self.file_name_label, 0, Qt.AlignCenter)
+        layout.addWidget(self.file_name_label, 0, Qt.AlignmentFlag.AlignCenter)
         layout.addSpacing(40)
-        layout.addWidget(self.notify_label, 0, Qt.AlignCenter)
+        layout.addWidget(self.notify_label, 0, Qt.AlignmentFlag.AlignCenter)
         layout.addStretch()
 
         self.port = get_free_port()
