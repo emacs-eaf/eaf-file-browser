@@ -32,6 +32,7 @@ import tempfile
 import uuid
 
 from core.buffer import Buffer
+from core.utils import get_emacs_theme_foreground, get_emacs_theme_background, interactive
 
 class AppBuffer(Buffer):
     def __init__(self, buffer_id, url, argument):
@@ -45,6 +46,13 @@ class AppBuffer(Buffer):
         super().destroy_buffer()
 
         message_to_emacs("Stop: {0} -> {1}".format(self.buffer_widget.address, self.buffer_widget.url))
+
+    @interactive
+    def update_theme(self):
+        self.theme_foreground_color = get_emacs_theme_foreground()
+        self.theme_background_color = get_emacs_theme_background()
+
+        self.buffer_widget.change_color(self.theme_background_color, self.theme_foreground_color)
 
 class Image(qrcode.image.base.BaseImage):
     def __init__(self, border, width, box_size):
@@ -120,3 +128,8 @@ class FileUploaderWidget(QWidget):
             stderr=subprocess.STDOUT,
             shell=True)
         message_to_emacs("Start: {0} -> {1}".format(self.address, self.url))
+
+    def change_color(self, background_color, foreground_color):
+        self.setStyleSheet("background-color: {};".format(background_color))
+        self.file_name_label.setStyleSheet("color: {}".format(foreground_color))
+        self.notify_label.setStyleSheet("color: {}".format(foreground_color))
