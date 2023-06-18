@@ -19,20 +19,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt6 import QtGui, QtCore
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QFont
-from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout
-from core.utils import get_local_ip, get_free_port, message_to_emacs
-import subprocess
 import os
-import qrcode
 import signal
+import subprocess
 import tempfile
 import uuid
 
+import qrcode
 from core.buffer import Buffer
 from core.utils import *
+from core.utils import get_free_port, get_local_ip, message_to_emacs
+from PyQt6 import QtCore, QtGui
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QLabel, QVBoxLayout, QWidget
+
 
 class AppBuffer(Buffer):
     def __init__(self, buffer_id, url, argument):
