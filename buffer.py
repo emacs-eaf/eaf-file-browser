@@ -25,11 +25,9 @@ import subprocess
 import tempfile
 import uuid
 
-import qrcode
 from core.buffer import Buffer
 from core.utils import *
 from core.utils import get_free_port, get_local_ip, message_to_emacs
-from PyQt6 import QtCore, QtGui
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QLabel, QVBoxLayout, QWidget
@@ -53,29 +51,6 @@ class AppBuffer(Buffer):
         super().update_theme()
 
         self.buffer_widget.change_color(self.theme_background_color, self.theme_foreground_color)
-
-class Image(qrcode.image.base.BaseImage):
-    def __init__(self, border, width, box_size):
-        self.border = border
-        self.width = width
-        self.box_size = box_size
-        size = (width + border * 2) * box_size
-        self._image = QtGui.QImage(size, size, QtGui.QImage.Format.Format_RGB16)
-        self._image.fill(QtCore.Qt.GlobalColor.white)
-
-    def pixmap(self):
-        return QtGui.QPixmap.fromImage(self._image)
-
-    def drawrect(self, row, col):
-        painter = QtGui.QPainter(self._image)
-        painter.fillRect(
-            (col + self.border) * self.box_size,
-            (row + self.border) * self.box_size,
-            self.box_size, self.box_size,
-            QtCore.Qt.GlobalColor.black)
-
-    def save(self, stream, kind=None):
-        pass
 
 class FileUploaderWidget(QWidget):
     def __init__(self, url, background_color, foreground_color):
@@ -118,7 +93,7 @@ class FileUploaderWidget(QWidget):
         self.local_ip = get_local_ip()
         self.address = "http://{0}:{1}".format(self.local_ip, self.port)
 
-        self.qrcode_label.setPixmap(qrcode.make(self.address, image_factory=Image).pixmap())
+        self.qrcode_label.setPixmap(get_qrcode_pixmap(self.address))
 
         tmp_db_file = os.path.join(tempfile.gettempdir(), "filebrowser-" + uuid.uuid1().hex + ".db")
         self.background_process = subprocess.Popen(
